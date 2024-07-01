@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="fragments :: page_head('Topics', 'tag')" />
+
+</head>
+<body>
+<div th:replace="navigation :: header_menu"></div>
+<h1 style="margin: 25px">Exam Topics</h1>
+<form class="text-center">
+    <label for="difficulty">Select Difficulty:</label>
+    <select id="difficulty" name="difficulty">
+        <option value="">Random</option>
+        <option value="1">Easy</option>
+        <option value="2">Medium</option>
+        <option value="3">Hard</option>
+    </select>
+</form>
+<ul>
+    <li>
+        <a class="topic-link" th:href="@{'/exam/topics/'+ ' ' + '?difficulty=' + '0'}">Random</a>
+    </li>
+    <li th:each="topic : ${topics}">
+        <a class="topic-link" th:href="@{'/exam/topics/'+ ${topic.name} + '?difficulty=' + '0'}">[[${topic.name}]]</a>
+    </li>
+</ul>
+<div th:replace="fragments :: user_footer"></div>
+<script>
+    // Lấy tham chiếu đến select element và danh sách các liên kết
+    const selectElement = document.getElementById("difficulty");
+    const links = document.querySelectorAll("ul li a");
+
+    // Đặt sự kiện "change" cho select element
+    selectElement.addEventListener("change", function () {
+        // Lấy giá trị đã chọn từ select
+        const selectedValue = selectElement.value;
+
+        // Cập nhật giá trị đã chọn vào tất cả các liên kết
+        links.forEach(function (link) {
+            const href = link.getAttribute("href");
+            const selected = href.split("=");
+            // Thay thế giá trị hiện tại trong href bằng giá trị đã chọn
+            const updatedHref = href.replace(selected[1], `${selectedValue}`);
+            link.setAttribute("href", updatedHref);
+        });
+    });
+</script>
+</body>
+</html>

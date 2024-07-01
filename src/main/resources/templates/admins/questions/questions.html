@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="fragments :: page_head('Questions', 'tag')"/>
+</head>
+<body>
+<div th:replace="navigation :: header_menu"></div>
+<h1 class="text-center" style="margin-top: 25px">Questions Management</h1>
+
+<div>
+    <div th:replace="fragments :: search_form_and_message('/manage/questions')"></div>
+</div>
+<form th:action="@{/manage/questions/export}">
+    <input id="keyword" type="hidden" name="keyword" th:value="${keyword}">
+    <input id="topicId" type="hidden" name="topicName" value="">
+    <input id="levelId" type="hidden" name="levelName" value="">
+    <input id="numQ" type="hidden" name="numQ" th:value="${numQ.length}">
+    <div style="margin-left: 15px" class="form-inline ">
+        <label for="filter">Topics:</label>
+        <select id="filter">
+            <option value="">All Topics</option>
+            <div th:each="t : ${topics}">
+                <option th:text="${t.name}" th:value="${t.name}"></option>
+            </div>
+        </select>
+        &nbsp;&nbsp;
+        <label for="filter2">Levels:</label>
+        <select id="filter2">
+            <option value="">All Levels</option>
+            <div th:each="level : ${levels}">
+                <option th:text="${level.level}" th:value="${level.level}"></option>
+            </div>
+        </select>
+        &nbsp;&nbsp;
+        <label for="filter3">Number of Questions:</label>
+        <input id="filter3" class="form-control col-sm-1" type="text" list="filterDrop">
+        <datalist id="filterDrop">
+            <option th:each="n,iter : ${numQ}" th:value="${(iter.index+1)*5}">[[${(iter.index+1) * 5}]]</option>
+        </datalist>
+    </div>
+
+
+    <div class="form-group row" style="margin: 15px">
+        <input type="button" class="col-sm-2" onclick="window.location.href='/manage/questions/new'"
+               value="Add Question"/>
+        <input type="submit" class="col-sm-2" value="Export to Document">
+        <input style="margin-left: 15px" type="button" class="col-sm-2"
+               onclick="window.location.href='/manage/questions?status=change'" value="Change List Questions"/>
+    </div>
+
+    <div th:if="${dangerMessage != null}" class="alert alert-danger text-center">
+        [[${dangerMessage}]]
+    </div>
+    <div th:if="${message != null}" class="alert alert-success text-center">
+        [[${message}]]
+    </div>
+</form>
+<!--<form th:action="@{/manage/questions/import}" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".xls,.xlsx">
+    <input type="submit" value="Import Excel">
+</form>-->
+<div class="container" style="max-width: 2150px; margin: 0 auto;">
+    <table id="dataTable" class="table table-bordered table-striped table-hover table-responsive-xl">
+        <thead>
+        <tr>
+            <th>Index</th>
+            <th>Content</th>
+            <th>Answers</th>
+            <th>Topics</th>
+            <th>Level</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="question, qiter : ${questions}">
+            <td>[[${qiter.index + 1}]]</td>
+            <td>
+                <pre style="width: 850px"><div th:utext="${question.rawContent}"></div></pre>
+            </td>
+            <td>
+                <div style="width: 350px" th:each="answer, iter : ${question.answers}">
+                    <div th:if="${answer.correct} == true">
+            <pre style="color: green; white-space: nowrap;">
+                <span th:text="|${'ABCDEFG'[iter.index]}|"></span>) [[${answer.content}]]
+            </pre>
+                    </div>
+                    <div th:if="${answer.correct} == false">
+            <pre style="white-space: nowrap;">
+                <span th:text="|${'ABCDEFG'[iter.index]}|"></span>) [[${answer.content}]]
+            </pre>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div th:if="${question.topic != null}">
+                    <div th:replace="fragments :: view(${question.topic.name})"/>
+                </div>
+            </td>
+            <td>
+                <div th:if="${question.level != null}">
+                    <div th:replace="fragments :: view(${question.level.level})"/>
+                </div>
+            <td>
+                <div th:replace="fragments :: status(${question.enabled}, 'question', '/manage/questions/' + ${question.id})"/>
+                &nbsp;
+                <div th:replace="fragments :: edit('question', '/manage/questions/edit/'+${question.id})"/>
+                &nbsp;
+                <div th:replace="fragments :: delete('order', ${question.id}, '/manage/questions/delete/'+${question.id})"/>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div th:replace="fragments :: admin_footer"></div>
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

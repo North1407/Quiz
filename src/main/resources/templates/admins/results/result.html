@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="fragments :: page_head('Questions', 'tag')"/>
+</head>
+<body>
+<div th:replace="navigation :: header_menu"></div>
+<h1 class="text-center" style="margin-top: 25px">UUID: [[${exam.uuid}]]</h1>
+
+<div style="margin-left: 15px">
+    Go to Question:&nbsp;
+    <input id="filterQ" class="form-control col-sm-1" type="text">
+    &nbsp;&nbsp;
+</div>
+
+<div class="container" style="max-width: 2150px; margin: 0 auto;">
+    <table id="dataTable" class="table table-bordered table-striped table-hover table-responsive-xl">
+        <thead>
+        <tr>
+            <th>Index</th>
+            <th>Content</th>
+            <th>Answers</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="question, qiter : ${exam.questions}">
+            <td>[[${qiter.index + 1}]]</td>
+            <td>
+                <pre style="width: 850px"><div th:utext="${question.content}"></div></pre>
+            </td>
+            <td>
+                <div style="width: 350px" th:each="answer, iter : ${question.answers}">
+                    <div th:if="${answer.correct} == true">
+            <pre style="color: green; white-space: nowrap;">
+                <span th:text="|${'ABCDEFG'[iter.index]}|"></span>) [[${answer.content}]]
+            </pre>
+                    </div>
+                    <div th:if="${answer.correct} == false">
+            <pre style="white-space: nowrap;">
+                <span th:text="|${'ABCDEFG'[iter.index]}|"></span>) [[${answer.content}]]
+            </pre>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div th:replace="fragments :: admin_footer"></div>
+<script>
+    var filterQ = document.getElementById('filterQ');
+    filterQ.addEventListener('input', function () {
+        num = parseInt(filterQ.value);
+        var table = document.getElementById("dataTable");
+        var tableRows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+        for (var i = 0; i < tableRows.length; i++) {
+            var row = tableRows[i];
+
+            if (i === num-1) {
+                row.style.display = ''; // Hiện dòng
+            } else {
+                row.style.display = 'none'; // Ẩn dòng
+            }
+        }
+    });
+
+</script>
+
+</body>
+</html>

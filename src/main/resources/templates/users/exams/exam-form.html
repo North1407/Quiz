@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="fragments :: page_head('Do Exam', 'tag')"/>
+</head>
+<body>
+<div th:replace="navigation :: header_menu"></div>
+<form id="examForm" th:action="@{/exam/submit}" th:object="${exam}" method="post">
+    <div id="countdown">Time left: <span id="timer"></span></div>
+    <input type="hidden" th:field="*{id}"/>
+    <div th:each="question, iter : *{questions}" class="question-container" style="margin-top: 25px">
+        <pre style="font-size: 15px;" th:utext="'Question ' + ${iter.index + 1} + ': ' + ${question.content}"></pre>
+        <div th:each="answer: ${question.answers}">
+            <label style="display: inline-block;" th:if="${question.trueAnswer != 1}">
+                <input type="checkbox" th:field="*{answers}" th:name="${question.id}" th:value="${answer.id}">
+                <span th:text="${answer.content}"></span>
+            </label>
+            <label th:if="${question.trueAnswer == 1}">
+                <input type="radio" th:attr="name=${question.id}" th:value="${answer.id}" required>
+                <span th:text="${answer.content}"></span>
+            </label>
+        </div>
+        <input type="hidden" th:field="*{answers}" th:id="${'q'+question.id}" value=""/>
+    </div>
+    <input type="submit" value="Submit">
+    <input style="margin-top: 25px" type="button" class="btn btn-primary" onclick="window.location.href='/exam/quit'" value="Quit Exam"/>
+</form>
+<div th:replace="fragments :: user_footer"></div>
+<script>
+    // Lấy thời gian kết thúc từ model và chuyển đổi nó thành đối tượng Date
+    var endTime = new Date([[${endTime}]]).getTime(); // Phải chuyển đổi từ milliseconds
+    var timerElement = document.getElementById('timer');
+
+    var countdownInterval = setInterval(function () {
+        var now = new Date().getTime();
+        var distance = endTime - now;
+
+        if (distance <= 0) {
+            clearInterval(countdownInterval); // Dừng bộ đếm khi hết giờ
+            timerElement.textContent = "Hết thời gian";
+            examForm.submit();
+        } else {
+            var minutes = Math.floor(distance / (1000 * 60)); // Chuyển đổi sang phút
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000); // Chuyển đổi sang giây
+
+            timerElement.textContent = minutes + " minutes " + seconds + " seconds"; // Hiển thị thời gian còn lại ở đơn vị phút và giây
+        }
+    }, 1000); // Cập nhật thời gian đếm ngược mỗi 1 giây (1000ms)
+
+    document.querySelectorAll('input[type="radio"]').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            var questionId = this.getAttribute('name');
+            var answerId = this.value;
+            document.getElementById('q' + questionId).value = answerId;
+        });
+    });
+
+</script>
+</body>
+</html>

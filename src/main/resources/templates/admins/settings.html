@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="fragments :: page_head('Settings', 'tag')" />
+</head>
+<body>
+<div th:replace="navigation :: header_menu"></div>
+
+<h1 style="margin: 25px">Settings</h1>
+<div th:if="${message != null}" style="max-width: 350px;margin: 0 auto" class="alert alert-success text-center">
+    [[${message}]]
+</div>
+<form th:action="@{/manage/settings/save}" method="post"  style="max-width: 350px; margin: 0 auto">
+
+    <div class="border border-secondary rounded p-3">
+        <p th:each="setting : ${settings}">
+            <label>[[${setting.name}]]</label>
+            <input type="hidden" name="settingIds" th:value="${setting.id}">
+            <input type="text" name="settingValues" th:value="${setting.value}" class="form-control" th:placeholder="${setting.name}" required/>
+        </p>
+
+        <p>
+            <input type="submit" value="Save" class="btn btn-primary"/>
+        </p>
+    </div>
+</form>
+<div th:replace="fragments :: admin_footer"/>
+</body>
+</html>

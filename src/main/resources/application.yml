@@ -1,0 +1,23 @@
+spring:
+    datasource:
+        url: jdbc:postgresql://10.1.13.155:5432/examdb
+        username: postgres
+        password: postgres
+    jpa:
+        hibernate:
+            ddl-auto: update
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.PostgreSQLDialect
+        show-sql: false
+    security:
+        oauth2:
+            client:
+                registration:
+                    google:
+                        client-id: 318551430641-f67v7p5tobf80dpidbr07l88fmh5ghdn.apps.googleusercontent.com
+                        client-secret: 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
+                        scope:
+                            - email
+                            - profile
+

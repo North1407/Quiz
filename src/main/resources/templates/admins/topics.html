@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="fragments :: page_head('Topics', 'tag')"/>
+</head>
+<body>
+<div th:replace="navigation :: header_menu"></div>
+<h1 class="text-center" style="margin: 25px">Topics Management</h1>
+<div th:if="${dangerMessage != null}" class="alert alert-danger text-center">
+    [[${dangerMessage}]]
+</div>
+<div th:if="${message != null}" class="alert alert-success text-center">
+    [[${message}]]
+</div>
+<div class="container" style="max-width: 750px; margin: 0 auto;">
+<form th:action="@{/manage/topics/save}" method="post">
+    <input type="hidden" name="topicId" th:value="${topicId}">
+    <div class="form-group row">
+    <label class="col-sm-2 col-form-label">Topic name:</label>
+    <div class="col-sm-7">
+        <input class="form-control" type="text" name="topicName" th:value="${topicName}" required>
+    </div>
+    <div class="col-sm-2">
+        <input type="submit" value="Add">
+    </div>
+</div>
+</form>
+</div>
+<div class="container" style="max-width: 750px; margin: 0 auto;">
+    <table class="table table-bordered table-striped table-hover table-responsive-xl">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Enabled</th>
+            <th></th>
+        </tr>
+        <tr th:each="topic : ${topics}">
+            <td>[[${topic.id}]]</td>
+            <td>
+                <div th:replace="fragments :: view(${topic.name})"/>
+            </td>
+            <td>
+                <div th:replace="fragments :: status(${topic.enabled}, 'topic', '/manage/topics/' + ${topic.id})"/>
+            <td>
+                <div th:replace="fragments :: edit('topic', '/manage/topics/edit/'+${topic.id})"/>
+                &nbsp;
+                <div th:replace="fragments :: delete('topic',${topic.id}, '/manage/topics/delete/'+${topic.id})"/>
+            </td>
+        </tr>
+    </table>
+</div>
+<div th:replace="fragments :: admin_footer"/>
+</body>
+</html>

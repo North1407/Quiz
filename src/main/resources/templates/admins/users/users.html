@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <head th:replace="fragments :: page_head('Users', 'tag')"/>
+</head>
+<body>
+<div th:replace="navigation :: header_menu"></div>
+<h1 class="text-center" style="margin-top: 25px">Users Management</h1>
+<div th:if="${dangerMessage != null}" class="alert alert-danger text-center">
+    [[${dangerMessage}]]
+</div>
+<div th:if="${message != null}" class="alert alert-success text-center">
+    [[${message}]]
+</div>
+<div class="container" style="max-width: 2150px; margin-top: 25px;">
+    <table class="table table-bordered table-striped table-hover table-responsive-xl">
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Photos</th>
+            <th>Role</th>
+            <th>Enabled</th>
+            <th></th>
+        </tr>
+        <tr th:each="user : ${users}">
+            <td>[[${user.id}]]</td>
+            <td>
+                <div th:replace="fragments :: view(${user.username})"/>
+            </td>
+            <td>
+                <div th:replace="fragments :: user_photos" />
+            </td>
+            <td>
+                <div th:if="${user.role != null}">
+                    <div th:replace="fragments :: view(${user.role.name})"/>
+                </div>
+            </td>
+            <td>
+                <div th:replace="fragments :: status(${user.enabled}, 'user', '/manage/users/' + ${user.id})"/>
+            </td>
+            <td>
+                <div th:replace="fragments :: edit('user', '/manage/users/edit/'+${user.id})"/>
+                &nbsp;
+                <div th:replace="fragments :: delete('user',${user.id}, '/manage/users/delete/'+${user.id})"/>
+            </td>
+        </tr>
+    </table>
+</div>
+<div th:replace="fragments :: admin_footer"/>
+</body>
+</html>

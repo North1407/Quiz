@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: page_head('Your Account Details', 'none')" />
+<body>
+<div class="container-fluid">
+    <div th:replace="navigation :: header_menu"></div>
+
+
+    <form th:action="@{/manage/users/save}" method="post" style="max-width: 700px; margin: 0 auto"
+          enctype="multipart/form-data"
+          th:object="${user}">
+        <input type="hidden" th:field="*{id}" />
+        <div class="text-center" style="margin: 25px">
+            <h2>Edit User</h2>
+        </div>
+
+        <div th:if="${message != null}" class="alert alert-success text-center">
+            [[${message}]]
+        </div>
+
+        <div class="border border-secondary rounded p-3">
+            <div class="form-group row" style="margin-top: 25px">
+                <label class="col-sm-2 col-form-label" >Username:</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" th:field="*{username}" readonly="readonly" />
+                </div>
+        </div>
+
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Password:</label>
+                <div class="col-sm-9">
+                    <input type="password" th:field="*{password}" class="form-control"
+                           placeholder="leave blank if you don't want to change password"
+                           minlength="3" maxlength="20"
+                    />
+                </div>
+            </div>
+
+            <div class="form-group row" >
+                <label class="col-sm-2 col-form-label" >Role:</label>
+                <div class="col-sm-9">
+                    <select th:field="*{role}">
+                        <div th:each="role : ${roles}">
+                            <option th:text="${role.name}" th:value="${role.id}"></option>
+                        </div>
+
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Enabled:</label>
+                <div class="col-sm-9">
+                    <input type="checkbox"  class="form-control col-sm-1" th:field="*{enabled}" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Photos:</label>
+                <div class="col-sm-6">
+                    <input type="hidden" th:field="*{photos}" />
+                    <input type="file" id="fileImage" name="image" accept="image/png, image/jpeg"
+                           class="mb-2" />
+                    <img id="thumbnail" alt="Photos preview" th:src="@{${user.photosImagePath}}"
+                         class="img-fluid" />
+                </div>
+            </div>
+            <div class="text-center" style="margin: 25px">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <br>
+                <input type="button" value="Cancel" class="btn btn-secondary" id="buttonCancel" />
+            </div>
+        </div>
+    </form>
+
+    <div th:replace="fragments :: admin_footer"></div>
+
+</div>
+<script th:src="@{/js/common_form.js}"></script>
+
+
+</body>
+</html>

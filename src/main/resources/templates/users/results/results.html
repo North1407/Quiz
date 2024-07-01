@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="fragments :: page_head('Result', 'tag')" />
+</head>
+<body>
+<div th:replace="navigation :: header_menu"></div>
+<h1 class="text-center" style="margin: 25px">Exams History </h1>
+<div class="container" style="max-width: 2150px; margin-top: 25px;">
+<table  class="table table-bordered table-striped table-hover table-responsive-xl">
+    <tr>
+        <th>Index</th>
+        <th>Topic</th>
+        <th>Mark</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+        <th>View details</th>
+    </tr>
+    <tr th:each="exam,iter : ${exams}">
+        <td th:text="${iter.index + 1}"></td>
+        <td th:if="${exam.topic != null}" th:text="${exam.topic.name}"></td>
+        <td th:if="${exam.topic == null}" th:text="Random"></td>
+        <td th:text="${exam.mark}"></td>
+        <td th:text="${exam.startTime}"></td>
+        <td th:text="${exam.endTime}"></td>
+        <td><a th:href="'results/get/'+${exam.id}">View</a></td>
+    </tr>
+</table>
+</div>
+<div th:replace="fragments :: user_footer"></div>
+</body>
+</html>

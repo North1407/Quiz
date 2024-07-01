@@ -1,0 +1,93 @@
+.correct {
+    color: green;
+}
+.incorrect {
+    color: red;
+}
+/* style.css */
+
+/* Căn giữa form và thời gian còn lại */
+#examForm, #countdown {
+    text-align: center;
+    margin: 0 auto;
+    width: 80%;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+/* Căn giữa nội dung câu hỏi và đáp án */
+.question-container {
+    text-align: left;
+    margin: 0 auto;
+    width: 90%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+/* Định dạng đáp án radio button và các label */
+input[type="radio"] {
+    margin-right: 10px;
+}
+
+label {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+/* Định dạng nút Submit */
+input[type="submit"] {
+    display: block;
+    margin: 0 auto;
+    background-color: #007BFF;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+/* Tùy chỉnh CSS để cải thiện giao diện */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+h1 {
+    text-align: center;
+    color: #333;
+}
+ul {
+    list-style-type: none;
+    padding: 0;
+    text-align: center;
+}
+li {
+    margin: 10px;
+}
+a.topic-link {
+    text-decoration: none;
+    color: #007bff;
+    font-size: 22px;
+    display: block;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+a.topic-link:hover {
+    background-color: #f5f5f5;
+}
+select {
+    font-size: 16px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.ck.ck-editor__editable_inline {
+    min-height: 500px;
+}

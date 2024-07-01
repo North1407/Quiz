@@ -1,0 +1,4 @@
+tài khoản admin: admin - 123
+tài khoản user: user - 123
+export bài kiểm tra: chọn chủ đề  và độ khó, trong giao diện làm bài ấn vào link export to document
+chỉnh số lượng câu hỏi trong setting của admin

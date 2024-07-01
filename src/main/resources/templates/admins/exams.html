@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="fragments :: page_head('Exams', 'tag')" />
+</head>
+<body>
+<div th:replace="navigation :: header_menu"></div>
+<h1 class="text-center" style="margin-top: 25px">Exams History </h1>
+<div th:if="${dangerMessage != null}" class="alert alert-danger text-center">
+    [[${dangerMessage}]]
+</div>
+<div th:if="${message != null}" class="alert alert-success text-center">
+    [[${message}]]
+</div>
+<div>
+    <div th:replace="fragments :: search_form_and_message('/manage/exams')"></div>
+</div>
+<div style="margin-left: 15px" class="form-inline ">
+    <label for="filter">Type:</label>
+    <select id="filter">
+        <option value="">All</option>
+        <option value="offline">Offline</option>
+        <option value="online">Online</option>
+    </select>
+</div>
+<div class="container" style="max-width: 2150px; margin-top: 25px;">
+    <table id="dataTable" class="table table-bordered table-striped table-hover table-responsive-xl">
+        <tr>
+            <th>Index</th>
+            <th>UUID</th>
+            <th>User</th>
+            <th>Topic</th>
+            <th>Mark</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Type</th>
+            <th>View details</th>
+            <th></th>
+        </tr>
+        <tr th:each="exam,iter : ${exams}">
+            <td th:text="${iter.index + 1}"></td>
+            <td>
+                <div th:replace="fragments :: view(${exam.uuid})"/>
+            </td>
+            <td>
+                <div th:if="${exam.user != null}">
+                    <div th:replace="fragments :: view(${exam.user.username})"/>
+                </div>
+            </td>
+            <td>
+                <div th:if="${exam.topic != null}">
+                    <div th:replace="fragments :: view(${exam.topic.name})"/>
+                </div>
+            </td>
+            <td>
+                <div th:replace="fragments :: view(${exam.mark})"/>
+            </td>
+            <td>
+                <div th:replace="fragments :: view(${exam.startTime})"/>
+            </td>
+            <td>
+                <div th:replace="fragments :: view(${exam.endTime})"/>
+            </td>
+            <td>
+                <div th:replace="fragments :: view(${exam.type})"/>
+            </td>
+            <td><a th:href="'results/get/'+${exam.id}">View</a></td>
+            <td>
+                <div th:replace="fragments :: delete('exam',${exam.id}, '/manage/exams/delete/'+${exam.id})"/>
+            </td>
+        </tr>
+    </table>
+</div>
+<div th:replace="fragments :: admin_footer"/>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Lấy các phần tử cần sử dụng
+        var filterDropdown = document.getElementById('filter');
+        var dataTable = document.getElementById('dataTable');
+        var tableRows = dataTable.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+        // Xử lý sự kiện khi dropdown Topics thay đổi
+        filterDropdown.addEventListener('change', handleDropdownChange);
+        console.log(filterDropdown.value);
+
+        function handleDropdownChange() {
+            var selectedValueType = filterDropdown.value;
+            // Lặp qua các dòng của bảng và ẩn/hiện dựa trên giá trị được chọn
+            for (var i = 1; i < tableRows.length; i++) {
+                var row = tableRows[i];
+                var cellType = row.getElementsByTagName('td')[7]; // Chỉnh số index dựa trên cột cần lọc Topics
+
+                if ((cellType.textContent.includes(selectedValueType))){
+                    row.style.display = ''; // Hiện dòng
+                } else {
+                    row.style.display = 'none'; // Ẩn dòng
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

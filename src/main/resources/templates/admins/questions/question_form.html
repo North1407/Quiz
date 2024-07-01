@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <head th:replace="fragments :: page_head('New Question', 'tag')"/>
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.2/classic/ckeditor.js"></script>
+</head>
+<body>
+<div th:replace="navigation :: header_menu"></div>
+<div class="container" style="max-width: 1000px; margin: 0 auto;">
+    <h1 class="text-center" style="margin: 25px">[[${title}]]</h1>
+    <form th:action="@{/manage/questions/save}" th:object="${question}" method="post">
+        <input type="hidden" th:field="*{id}"/>
+        <div class="form-group">
+            <label for="topics">Topic:</label>
+            <select id="topics" th:field="*{topic}" class="form-control">
+                <div th:each="t : ${topics}">
+                    <option th:text="${t.name}" th:value="${t.id}"></option>
+                </div>
+
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="difficulty">Difficulty:</label>
+            <select id="difficulty" th:field="*{level}" class="form-control" >
+                <div th:each="level : ${levels}">
+                    <option th:text="${level.level}" th:value="${level.id}"></option>
+                </div>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Content:</label>
+            <pre>
+            <textarea id = "questionTextarea" style="resize: none;" rows="15"  class="form-control" name="content" maxlength="1000" th:field="*{content}"></textarea>
+            </pre>
+        </div>
+
+
+        <div th:each="answer, status : ${question.answers}" class="form-group"
+             th:id="'divDetail' + ${status.index}">
+            <input type="hidden" name="answerIDs" th:value="${answer.id}"/>
+            <label>Answer:</label>
+            <div class="form-group row">
+                <div class="col-sm-8">
+                <textarea style="resize: none;" type="text" rows="5" class="form-control answerTextarea" name="answerContents" maxlength="255"
+                          th:value="${answer.content}" required>[[${answer.content}]]</textarea>
+                </div>
+
+                <label class="col-sm-1 col-form-label">Correct:</label>
+                <div class="col-sm-1">
+                    <input type="checkbox" class="form-control w-25 checkbox" name="answerCorrects" maxlength="255"
+                           th:id="${status.index}" th:checked="${answer.isCorrect}"
+                           value='1'/>
+                    <div th:if="${!answer.isCorrect}">
+                        <input type="hidden" th:id="'hidden-'+${status.index}" name="answerCorrects" value='0'>
+                    </div>
+
+                </div>
+                <div class="col-sm-1">
+                    <a name="linkRemoveDetail" class="btn fas fa-times-circle fa-2x icon-dark"
+                       title="Remove this Answer"></a>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div th:if="${question.id==null}" class="form-group" th:id="'divDetail' + ${#lists.size(question.answers)}">
+            <input type="hidden" name="answerIDs" value="0"/>
+
+            <label>Answer:</label>
+            <div class="form-group row">
+                <div class="col-sm-8">
+                    <textarea style="resize: none;" type="text" rows="5" class="form-control answerTextarea" name="answerContents" maxlength="255" required></textarea>
+                </div>
+
+                <label class="col-sm-1 col-form-label">Correct:</label>
+                <div class="col-sm-1">
+                    <input type="checkbox" class="form-control w-25 checkbox" name="answerCorrects" maxlength="255"
+                           value='1' th:id="${#lists.size(question.answers)}">
+                    <input type="hidden" th:id="'hidden-'+${#lists.size(question.answers)}" name="answerCorrects" value='0'>
+                </div>
+                <div class="col-sm-1">
+                    <a name="linkRemoveDetail" class="btn fas fa-times-circle fa-2x icon-dark"
+                       title="Remove this Answer"></a>
+                </div>
+            </div>
+        </div>
+
+        <div id="divQuestionAnswers"></div>
+        &nbsp;
+        <div class="text-center">
+            <input type="button" class="btn btn-secondary" value="Add More Answer" onclick="addNextAnswerSection()"/>
+        </div>
+        <br>
+        <div class="text-center" style="margin-bottom: 25px">
+            <input type="submit" class="btn btn-primary" value="Save Question"/>
+        </div>
+        <div style="text-align: center;">
+            <input type="button" class="btn btn-secondary" onclick="window.location.href='/manage/questions'" value="Cancel"/>
+        </div>
+    </form>
+</div>
+<div th:replace="fragments :: admin_footer"/>
+<script th:src="@{/js/text_editer.js}"></script>
+<script th:src="@{/js/product_form_details.js}"></script>
+</body>
+</html>
